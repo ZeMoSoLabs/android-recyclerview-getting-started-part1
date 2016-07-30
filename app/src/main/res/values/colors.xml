@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="black">#000</color>
+    <color name="list_selected">#FFDDDD</color>
+    <color name="list_unselected">#FFFFFF</color>
+    <color name="list_long_pressed">#DDDDFF</color>
+    <color name="list_divider_color">#ccc</color>
 </resources>
