@@ -60,6 +60,7 @@ public class RecyclerViewActivity extends AppCompatActivity implements CustomAda
         Bitmap bitmap = getRoundedShape(BitmapFactory.decodeResource(getResources(),R.drawable.ironman));
         Drawable d = new BitmapDrawable(getResources(), bitmap);
         mItems = new ArrayList<>();
+        //adding test items to the list
         for(int i=0; i<30; i++){
             mItems.add(i, new RecyclerViewClass(i+" string1", i+" string2", d));
 
