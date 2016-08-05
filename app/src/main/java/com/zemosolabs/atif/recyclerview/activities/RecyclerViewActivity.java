@@ -1,19 +1,3 @@
-/**
- * Copyright 2016 Mohammed Atif
- *
- *Licensed under the Apache License, Version 2.0 (the "License");
- *you may not use this file except in compliance with the License.
- *You may obtain a copy of the License at
- *
- *http://www.apache.org/licenses/LICENSE-2.0
- *
- *Unless required by applicable law or agreed to in writing, software
- *distributed under the License is distributed on an "AS IS" BASIS,
- *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *See the License for the specific language governing permissions and
- *limitations under the License.
- */
-
 package com.zemosolabs.atif.recyclerview.activities;
 
 import android.graphics.Bitmap;
@@ -44,6 +28,11 @@ public class RecyclerViewActivity extends AppCompatActivity implements CustomAda
     private List<RecyclerViewClass> mItems;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    /**
+     *<p>RecyclerView, Adapter and LayoutManagers are initialized within this method.</p>
+     * <p>In this example, list items are also added in onCreate add passed as RecyclerViewClass object to the adapter.</p>
+     * @param savedInstanceState will be used in next update to retain the state of the app on rotation of the screen.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,18 +46,22 @@ public class RecyclerViewActivity extends AppCompatActivity implements CustomAda
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new RecyclerViewDecorator(this));
+        //creating a rounded drawable for avatar
         Bitmap bitmap = getRoundedShape(BitmapFactory.decodeResource(getResources(),R.drawable.ironman));
         Drawable d = new BitmapDrawable(getResources(), bitmap);
         mItems = new ArrayList<>();
         //adding test items to the list
         for(int i=0; i<30; i++){
             mItems.add(i, new RecyclerViewClass(i+" string1", i+" string2", d));
-
         }
         mAdapter = new CustomAdapter(this, mItems);
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    /**
+     * <p>This method is overridden to handle the back press made by the user,
+     * It helps the user to control when to exit the app and when to come to normal state from long press state.</p>
+     */
     @Override
     public void onBackPressed() {
         if(mAdapter.getLongPressStatus()){
@@ -78,9 +71,15 @@ public class RecyclerViewActivity extends AppCompatActivity implements CustomAda
         }
     }
 
+    /**
+     * This method is used to create Whatsapp like round images to display as profile image or avatars.
+     * @param scaleBitmapImage Bitmap of the image that is to be displayed as circle.
+     * @return Bitmap of the same image cropped as circle.
+     */
     public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
+        //setting up height and width of the profile image
         int targetWidth = (int)getResources().getDimension(R.dimen.profile_pic_size);
-        int targetHeight = (int)getResources().getDimension(R.dimen.profile_pic_size);;
+        int targetHeight = (int)getResources().getDimension(R.dimen.profile_pic_size);
         Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
                 targetHeight,Bitmap.Config.ARGB_8888);
 
@@ -100,12 +99,22 @@ public class RecyclerViewActivity extends AppCompatActivity implements CustomAda
         return targetBitmap;
     }
 
+    /**
+     * <p>This method is used to remove the item from speicified position</p>
+     * @param position location of the item to be removed
+     */
     @Override
     public void updateItemList(int position) {
         mItems.remove(position);
         mAdapter.notifyItemRemoved(position);
     }
 
+    /**
+     * <p>Updates the background checkbox status in POJO class and helps to set the background color on long press.</p>
+     * <p>Illegal state is checked to prevent changing of checkbox status while list is being scrolled.</p>
+     * @param position position of the item in list where checkbox status is changed.
+     * @param isChecked current status of the checkbox.
+     */
     @Override
     public void updateListBackground(int position, boolean isChecked) {
         try {

@@ -1,19 +1,3 @@
-/**
- * Copyright 2016 Mohammed Atif
- *
- *Licensed under the Apache License, Version 2.0 (the "License");
- *you may not use this file except in compliance with the License.
- *You may obtain a copy of the License at
- *
- *http://www.apache.org/licenses/LICENSE-2.0
- *
- *Unless required by applicable law or agreed to in writing, software
- *distributed under the License is distributed on an "AS IS" BASIS,
- *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *See the License for the specific language governing permissions and
- *limitations under the License.
- */
-
 package com.zemosolabs.atif.recyclerview.adapters;
 
 import android.content.Context;
@@ -41,18 +25,34 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomRecy
     boolean onLongPressReceived = false;
     UpdateMainClass updateMainClass;
 
+    /**
+     * Contructor to initialize context and list items.
+     * @param context Context of the Activity on which RecyclerView is initialised
+     * @param items List of POJO object that contains the data to update the rows
+     */
     public CustomAdapter(Context context, List<RecyclerViewClass> items){
         mContext = context;
         mItems = items;
+        //Check whether the Activity implements UpdateMainClass Interface or not
         if(context instanceof UpdateMainClass){
             updateMainClass = (UpdateMainClass)context;
         }
     }
 
+    /**
+     * <p>This method updates the long press status variable when called from the Activity</p>
+     * <p>Helpful to prevent any unwanted changes to status variable</p>
+     * @param status tell whether whether long press is clicked or not
+     */
     public void setOnLongPressStatus(boolean status){
         onLongPressReceived = status;
         notifyDataSetChanged();
     }
+
+    /**
+     * Provides the long press status to the Activity
+     * @return longPressReceived status
+     */
     public boolean getLongPressStatus(){
         return onLongPressReceived;
     }
@@ -71,6 +71,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomRecy
         holder.mAvatarView.setImageDrawable(mItems.get(position).getmImage_url());
         holder.mMsg1.setText(mItems.get(position).getMessage1());
         holder.mMsg2.setText(mItems.get(position).getMessage2());
+        /**
+         * <p>Enable the row delete and select layout and
+         * Colors the background based on check box status if onLongPressReceived variable is set to true</p>
+         * <p>Otherwise renders a regular white background list with visible checkboxes that are selected.</p>
+         */
         if(onLongPressReceived) {
             holder.checkboxHolder.setVisibility(View.VISIBLE);
             holder.mCheckBox.setChecked(mItems.get(position).getmIsChecked());
@@ -93,12 +98,18 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomRecy
                 holder.mCheckBox.setChecked(false);
             }
         }
+        //Calls the interface method in Activity to respond to CheckBox changes
         holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 updateMainClass.updateListBackground(holder.getAdapterPosition(), b);
             }
         });
+        /**
+         * <p>Responds to long press made on any row</p>
+         * <p>Checks the item on which long press is made
+         * sets the onLongPressReceived status to true and notify the adapter to refresh the list.</p>
+         */
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -108,6 +119,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomRecy
                 return true;
             }
         });
+        //Calls the interface in Activity to remove the item from the List.
         holder.mDeleteRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,6 +144,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.CustomRecy
         private CardView cardView;
 
 
+        /**
+         * Initializes all the views of a ViewHolder
+         * @param itemView parent view in which all the List Item views are present
+         */
         public CustomRecyclerViewHolder(View itemView) {
             super(itemView);
             mMsg1 = (TextView)itemView.findViewById(R.id.text_view1);
